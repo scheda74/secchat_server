@@ -20,3 +20,5 @@ var mongoose = require('mongoose'),
         res.json(msg);
       })
   }
+
+  // exports.get_a_message = function()
