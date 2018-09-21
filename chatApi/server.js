@@ -7,7 +7,7 @@ var express = require('express'),
   
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://https://www.secchat.me/chatDb'); 
+mongoose.connect('mongodb://www.secchat.me/chatDb'); 
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
