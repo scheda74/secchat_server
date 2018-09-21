@@ -4,12 +4,12 @@ module.exports = function(app) {
 
   // todoList Routes
   app.route('/usr/messages')
-    .get(chat.get_all_messages)
-    .post(chat.send_a_message);
+    .get(chat.list_all_messages, (err) => {})
+    .post(chat.send_a_message, (err) => {});
 
 
-  app.route('/usr/messages/:taskId')
-    .get(chat.read_a_message)
+  app.route('/usr/:chatId')
+    .get(chat.get_a_chat, (err) => {})
     // .put(chat.update_a_message) // is this even possible?
-    .delete(chat.delete_a_message); // only in DB not at client - this can be implemented tho
+    .delete(chat.delete_a_message, (err) => {}); // only in DB not at client - this can be implemented tho
 };
