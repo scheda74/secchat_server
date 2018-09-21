@@ -3,7 +3,7 @@ module.exports = function(app) {
   var chat = require('../controllers/chatController');
 
   // todoList Routes
-  app.route('/chats/messages')
+  app.route('/chats')
     .get(chat.list_all_messages, (err) => {})
     .post(chat.send_a_message, (err) => {});
 
