@@ -23,17 +23,4 @@ routes(app); //register the route
 app.listen(port);
 
 
-console.log('todo list RESTful API server started on: ' + port);
-
-stream {
-  upstream mongo_backend {
-      server 127.0.0.1:27017;
-  }
-  server {
-      listen 27020 ssl;
-      proxy_connect_timeout 5s;
-      proxy_timeout 10s;
-      proxy_pass    stream_mongo_backend;
-  }
-
-}
+console.log('RESTful API server started on: ' + port);
