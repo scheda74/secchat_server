@@ -12,25 +12,32 @@ Chat.find({}, function(err, msg) {
         res.send(err);
     }
     res.json(msg);
-}).catch((err) => console.log(err));
+})
 };
 
 exports.send_a_message = function(req, res) {
+    console.log(req.params.userId);
     var new_msg = new Chat(req.body)
     new_msg.save(function(err, msg) {
     if(err) {
         res.send(err);
     }
     res.json(msg);
-    }).catch((err) => console.log(err));
+    });
 }
 
 exports.get_a_chat = function(req, res) {
-    Chat.findById(req.params.chatId, function(err, messages) {
+    //console.log(req.params.userId);
+    User.findById(req.params.userId, function(err, usr) {
+        //res.json(usr);
         if(err) {
             res.send(err)
         }
-        res.json(messages)
+        Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
+            if(err) return res.status(500).send(err);
+            if(messages !== null) res.status(200).send(messages);
+        });
+        //res.json(messages)
     }).catch((err) => console.log(err));
 }
 
