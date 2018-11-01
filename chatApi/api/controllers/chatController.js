@@ -4,7 +4,24 @@ const UserData = require('../models/userModel');
 
 var mongoose = require('mongoose'),
   Chat = mongoose.model('Chats'),
-  User = mongoose.model('Users');
+  User = mongoose.model('Users'),
+  jwt = require('jsonwebtoken');
+
+
+exports.verifyToken = function(req, res, next) {
+    var token = req.body.token || req.params.token || req.headers['x-access-token'];
+    if(token) {
+        jwt.verify(token, req.app.get('superSecret'), function(err, decoded) {
+            if(err) {
+                return res.json({ success: false, message: 'Failed to authenticate token ' + err})
+            }
+            req.decoded = decoded;
+            next();
+        });
+    } else {
+        return res.status(403).send({ success: false, message: 'No token provided!'})
+    }
+}
 
 exports.list_all_messages = function(req, res) {
 Chat.find({}, function(err, msg) {
@@ -15,28 +32,43 @@ Chat.find({}, function(err, msg) {
 })
 };
 
+
+
 exports.send_a_message = function(req, res) {
-    console.log(req.params.userId);
-    var new_msg = new Chat(req.body)
-    new_msg.save(function(err, msg) {
-    if(err) {
-        res.send(err);
-    }
-    res.json(msg);
-    });
+    //console.log(req.params.userId);
+    User.findById(req.decoded.userId, function(err, usr) {
+        if(err) return res.send(err);
+        if(!usr) {
+            return res.status(403).send({ success: false, message: 'User authentication failed'});
+        } else {
+            var new_msg = new Chat({ sender: usr.email, receiver: req.body.receiver, enc_text: req.body.enc_text });
+            // console.log(new_msg)
+            new_msg.save(function(err, msg) {
+            if(err) {
+                res.send(err);
+            }
+            return res.json(msg);
+        });
+        }
+    });  
 }
 
 exports.get_a_chat = function(req, res) {
-    //console.log(req.params.userId);
-    User.findById(req.params.userId, function(err, usr) {
+    console.log(req.decoded.userId);
+    User.findById(req.decoded.userId, function(err, usr) {
         //res.json(usr);
         if(err) {
             res.send(err)
         }
-        Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
-            if(err) return res.status(500).send(err);
-            if(messages !== null) res.status(200).send(messages);
-        });
+        if(!usr) {
+            return res.status(403).send({success: false, message: 'User authentication failed'});
+        } else {
+            Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
+                if(err) return res.status(500).send(err);
+                if(messages !== null) res.status(200).send(messages);
+            });
+        }
+        
         //res.json(messages)
     }).catch((err) => console.log(err));
 }
@@ -45,13 +77,21 @@ exports.login = function(req, res) {
     User.findOne({email: req.body.email}, function(err, usr) {
         if(err) {
             res.send(err);
-        } else if(usr === null) {
+        }
+        if(!usr) {
             return res.status(500).send({email: req.params.email + ' does not exist'});
+        } else if(req.body.password === usr.password) {
+            const payload = { userId: usr._id };
+            var token = jwt.sign(payload, req.app.get('superSecret'), {
+                expiresIn : 86400000
+            });
+            return res.json({
+                success: true,
+                message: 'token created',
+                token: token
+            });
         }
-        if(req.body.password === usr.password) {
-            return res.send('authentication successfull!');
-        }
-        res.json(usr);
+        return res.json(usr);
     }).catch((err) => console.log(err));
 }
 

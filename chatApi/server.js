@@ -1,5 +1,6 @@
 var express = require('express'),
   app = express(),
+  config = require('./config'),
   port = process.env.PORT || 3339,
   mongoose = require('mongoose'),
   Chat = require('./api/models/chatModel'),
@@ -8,13 +9,14 @@ var express = require('express'),
   
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/chatDb').then(
+mongoose.connect(config.database).then(
   (res) => {
       console.log("Successfully connected to the database.")
   }
-  ).catch(() => {
-    console.log("Conntection to database failed.");
-}); 
+  ).catch((err) => {
+    console.log("Connection to database failed");
+});
+app.set('superSecret', config.secret);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
