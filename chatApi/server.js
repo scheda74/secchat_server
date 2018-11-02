@@ -17,6 +17,7 @@ mongoose.connect(config.database).then(
     console.log("Connection to database failed");
 });
 app.set('superSecret', config.secret);
+app.set('saltRounds', config.saltRounds);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

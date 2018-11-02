@@ -5,7 +5,8 @@ const UserData = require('../models/userModel');
 var mongoose = require('mongoose'),
   Chat = mongoose.model('Chats'),
   User = mongoose.model('Users'),
-  jwt = require('jsonwebtoken');
+  jwt = require('jsonwebtoken'),
+  bcrypt = require('bcrypt');
 
 
 exports.verifyToken = function(req, res, next) {
@@ -31,7 +32,6 @@ Chat.find({}, function(err, msg) {
     res.json(msg);
 })
 };
-
 
 
 exports.send_a_message = function(req, res) {
@@ -79,28 +79,46 @@ exports.login = function(req, res) {
             res.send(err);
         }
         if(!usr) {
-            return res.status(500).send({email: req.params.email + ' does not exist'});
-        } else if(req.body.password === usr.password) {
-            const payload = { userId: usr._id };
-            var token = jwt.sign(payload, req.app.get('superSecret'), {
-                expiresIn : 86400000
-            });
-            return res.json({
-                success: true,
-                message: 'token created',
-                token: token
+            return res.status(500).send({email: req.body.email + ' does not exist'});
+        } else {
+            bcrypt.compare(req.body.password, usr.password, function(err, result) {
+                if(err) return res.send('error: ' + err);
+                if(result) {
+                    const payload = { userId: usr._id };
+                    var token = jwt.sign(payload, req.app.get('superSecret'), {
+                        expiresIn : 86400000
+                    });
+                    return res.json({
+                        success: true,
+                        message: 'token created',
+                        token: token
+                    });
+                } else {
+                    res.status(403).send({ success: false, message: 'Wrong password entered!' });
+                }
             });
         }
-        return res.json(usr);
     }).catch((err) => console.log(err));
 }
 
 exports.create_user = function(req, res) {
-    var newUser = new User(req.body);
-    // console.log(req.body);
-    newUser.save(function(err, createdUser) {
-        if(err) 
-            return res.send(err);
-        res.status(200).send(createdUser);
+    User.find({ email: req.body.email }, function(err, usr) {
+        if(err) return res.send(err);
+        // console.log(usr.length);
+        if(usr.length !== 0) {
+            return res.status(403).send({ success: false, message: 'User already exists' });
+        } else {
+            bcrypt.hash(req.body.password, req.app.get('saltRounds'), function(err, hash) {
+                if(err) return res.send({ success: false, message: 'Error in hashing password: ' + err});
+                console.log(hash);
+                var newUser = new User({ email: req.body.email, password: hash });
+                newUser.save(function(err, createdUser) {
+                    if(err) 
+                        return res.send(err);
+                    return res.status(200).send(createdUser);
+                });
+            });
+        }
     });
+    
 }
