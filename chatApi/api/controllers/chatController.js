@@ -65,10 +65,9 @@ exports.get_a_chat = function(req, res) {
         } else {
             Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
                 if(err) return res.status(500).send(err);
-                if(messages !== null) res.status(200).send(messages);
+                if(messages !== null) return res.status(200).send(messages);
             });
         }
-        
         //res.json(messages)
     }).catch((err) => console.log(err));
 }
