@@ -87,7 +87,7 @@ exports.login = function(req, res) {
                     var token = jwt.sign(payload, req.app.get('superSecret'), {
                         expiresIn : 86400000
                     });
-                    return res.json({
+                    return res.status(200).send({
                         success: true,
                         message: 'token created',
                         token: token
