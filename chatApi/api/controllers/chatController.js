@@ -78,7 +78,11 @@ exports.login = function(req, res) {
             res.send(err);
         }
         if(!usr) {
-            return res.status(500).send({email: req.body.email + ' does not exist'});
+            return res.status(500).send({
+                success: false,
+                email: req.body.email, 
+                message: 'user does not exist',
+            });
         } else {
             bcrypt.compare(req.body.password, usr.password, function(err, result) {
                 if(err) return res.send('error: ' + err);
