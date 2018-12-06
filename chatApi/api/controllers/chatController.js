@@ -120,6 +120,7 @@ exports.create_user = function(req, res) {
                 console.log(hash);
                 var newUser = new User({ username: req.body.username , email: req.body.email, password: hash });
                 newUser.save(function(err, createdUser) {
+                    console.log(createdUser);
                     if(err) 
                         return res.send({ success: false, message: 'Error in saving user to database ' + err });
                     return res.status(200).send({
