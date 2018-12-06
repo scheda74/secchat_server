@@ -118,7 +118,7 @@ exports.create_user = function(req, res) {
             bcrypt.hash(req.body.password, req.app.get('saltRounds'), function(err, hash) {
                 if(err) return res.send({ success: false, message: 'Error in hashing password: ' + err});
                 console.log(hash);
-                var newUser = new User({ email: req.body.email, password: hash });
+                var newUser = new User({ username: req.body.username , email: req.body.email, password: hash });
                 newUser.save(function(err, createdUser) {
                     if(err) 
                         return res.send({ success: false, message: 'Error in saving user to database ' + err });
