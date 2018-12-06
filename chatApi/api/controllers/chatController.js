@@ -111,6 +111,10 @@ exports.create_user = function(req, res) {
         if(usr.length !== 0) {
             return res.status(403).send({ success: false, message: 'User already exists' });
         } else {
+            const payload = { userId: usr._id };
+            var token = jwt.sign(payload, req.app.get('superSecret'), {
+                expiresIn : 86400000
+            });
             bcrypt.hash(req.body.password, req.app.get('saltRounds'), function(err, hash) {
                 if(err) return res.send({ success: false, message: 'Error in hashing password: ' + err});
                 console.log(hash);
@@ -118,7 +122,11 @@ exports.create_user = function(req, res) {
                 newUser.save(function(err, createdUser) {
                     if(err) 
                         return res.send(err);
-                    return res.status(200).send(createdUser);
+                    return res.status(200).send({
+                        success: true,
+                        message: 'User successfully created',
+                        token: token
+                    });
                 });
             });
         }
