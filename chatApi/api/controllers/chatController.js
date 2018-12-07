@@ -64,8 +64,8 @@ exports.get_a_chat = function(req, res) {
             return res.status(403).send({success: false, message: 'User authentication failed'});
         } else {
             Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
-                if(err) return res.status(500).send(err);
-                if(messages !== null) return res.status(200).send(messages);
+                if(err) return res.status(500).send({success: false, msg: err});
+                if(messages !== null) return res.status(200).send({success: true, msg_enc: messages});
             });
         }
         //res.json(messages)
@@ -120,7 +120,7 @@ exports.create_user = function(req, res) {
                 console.log(hash);
                 var newUser = new User({ username: req.body.username , email: req.body.email, password: hash });
                 newUser.save(function(err, createdUser) {
-                    // console.log(createdUser);
+                    //console.log(createdUser);
                     if(err) 
                         return res.send({ success: false, message: 'Error in saving user to database ' + err });
                     return res.status(200).send({
