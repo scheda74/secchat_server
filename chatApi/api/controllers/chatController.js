@@ -94,7 +94,8 @@ exports.login = function(req, res) {
                     return res.status(200).send({
                         success: true,
                         message: 'token created',
-                        token: token
+                        token: token,
+                        user: usr
                     });
                 } else {
                     res.status(403).send({ success: false, message: 'Wrong password entered!' });
