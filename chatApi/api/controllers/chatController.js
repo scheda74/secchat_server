@@ -44,10 +44,8 @@ exports.send_a_message = function(req, res) {
             var new_msg = new Chat({ sender: usr.email, receiver: req.body.receiver, enc_text: req.body.enc_text });
             // console.log(new_msg)
             new_msg.save(function(err, msg) {
-            if(err) {
-                res.send({ log: err });
-            }
-            return res.send({ success: true, log: 'Message saved to database' + msg });
+            if(err) res.send({ success: false, log: err });
+            return res.send({ success: true, msg: msg, log: 'Message saved to database' });
         });
         }
     });  
