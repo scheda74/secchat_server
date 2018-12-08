@@ -67,13 +67,13 @@ exports.get_a_chat = function(req, res) {
         }
         console.log('user found!');
         if(!usr) {
-            return res.status(403).send({success: false, log: 'User authentication failed'});
+            res.status(403).send({success: false, log: 'User authentication failed'});
         } else {
             Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
-                if(err) return res.status(500).send({success: false, log: 'error: ' + err});
+                if(err) res.status(500).send({success: false, log: 'error: ' + err});
                 console.log('chats found! ' + messages);
                 //console.log('messages: ' + messages);
-                return res.json({success: true, chat: [messages], log: 'chat sent!'});
+                res.send({success: true, chat: [messages], log: 'chat sent!'});
                 //else return res.json({ success: true, chat: [], log: 'Start your chat!'});
             });
         }
