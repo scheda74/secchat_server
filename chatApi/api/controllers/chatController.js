@@ -55,7 +55,7 @@ exports.send_a_message = function(req, res) {
 
 exports.get_available_users = function(req, res) {
     User.findById({}, function(err, users) {
-        if(err) return res.send({success = false, msg_enc: err.message});
+        if(err) return res.send({success: false, msg_enc: err.message});
         return res.send({success: true, available: users});
     });
 }
