@@ -70,8 +70,9 @@ exports.get_a_chat = function(req, res) {
         } else {
             Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
                 if(err) return res.status(500).send({success: false, log: err});
+                console.log('messages: ' + messages);
                 if(messages !== null) return res.status(200).send({success: true, chat: messages});
-                else return res.status(200).send({ success: true, log: 'Start your chat!'})
+                else return res.status(200).send({ success: true, log: 'Start your chat!'});
             });
         }
         //res.json(messages)
