@@ -59,8 +59,8 @@ exports.get_available_users = function(req, res) {
 }
 
 exports.get_a_chat = function(req, res) {
-    console.log('starting to fetch chat of user with id ' + req.decoded._id)
-    User.findById(req.decoded._id, function(err, usr) {
+    //console.log('starting to fetch chat of user with id ' + req.decoded.userId)
+    User.findById(req.decoded.userId, function(err, usr) {
         //res.json(usr);
         if(err) {
             res.send({success: false, log: err})
