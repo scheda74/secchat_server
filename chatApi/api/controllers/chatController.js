@@ -63,26 +63,26 @@ exports.get_a_chat = function(req, res) {
     User.findById(req.decoded.userId, function(err, usr) {
         //res.json(usr);
         if(err) {
-            res.send({success: false, log: err.message})
+            res.send({success: false, log: err})
         }
         if(!usr) {
             return res.status(403).send({success: false, log: 'User authentication failed'});
         } else {
             Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
-                if(err) return res.status(500).send({success: false, log: 'error: ' + err.message});
-                console.log('messages: ' + messages);
+                if(err) return res.status(500).send({success: false, log: 'error: ' + err});
+                //console.log('messages: ' + messages);
                 if(messages !== null) return res.status(200).send({success: true, chat: messages, log: 'chat sent!'});
                 else return res.status(200).send({ success: true, log: 'Start your chat!'});
             });
         }
         //res.json(messages)
-    }).catch((err) => res.send({success: false, log: err.message}));
+    }).catch((err) => res.send({success: false, log: err}));
 }
 
 exports.login = function(req, res) {
     User.findOne({email: req.body.email}, function(err, usr) {
         if(err) {
-            res.send(err);
+            res.send({success: false, message: err});
         }
         if(!usr) {
             return res.status(500).send({
