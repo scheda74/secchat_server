@@ -45,9 +45,9 @@ exports.send_a_message = function(req, res) {
             // console.log(new_msg)
             new_msg.save(function(err, msg) {
             if(err) {
-                res.send(err);
+                res.send({ log: err });
             }
-            return res.json(msg);
+            return res.send({ success: true, log: 'Message saved to database' + msg });
         });
         }
     });  
