@@ -73,7 +73,7 @@ exports.get_a_chat = function(req, res) {
                 if(err) return res.status(500).send({success: false, log: 'error: ' + err});
                 console.log('chats found! ' + messages);
                 //console.log('messages: ' + messages);
-                return res.json({success: true, chat: messages, log: 'chat sent!'});
+                return res.json({success: true, chat: [messages], log: 'chat sent!'});
                 //else return res.json({ success: true, chat: [], log: 'Start your chat!'});
             });
         }
