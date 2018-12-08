@@ -56,12 +56,12 @@ exports.send_a_message = function(req, res) {
 exports.get_available_users = function(req, res) {
     User.findById({}, function(err, users) {
         if(err) return res.send({success: false, msg_enc: err.message});
-        return res.send({success: true, available: users});
+        return res.json({success: true, available: users});
     });
 }
 
 exports.get_a_chat = function(req, res) {
-    console.log(req.decoded.userId);
+    // console.log(req.decoded.userId);
     User.findById(req.decoded.userId, function(err, usr) {
         //res.json(usr);
         if(err) {
