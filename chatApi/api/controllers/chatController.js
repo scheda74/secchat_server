@@ -56,7 +56,6 @@ exports.send_a_message = function(req, res) {
 exports.get_available_users = function(req, res) {
     User.find({}, function(err, users) {
         if(err) return res.send({success: false, msg_enc: err.message});
-        for(val in users) console.log(val);
         return res.json({success: true, available: users});
     });
 }
