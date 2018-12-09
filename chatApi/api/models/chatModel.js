@@ -32,7 +32,7 @@ var dataModel = {
     },
     tag: {
       type: String,
-      required: cipher
+      required: 'tag'
     }
 }
 
