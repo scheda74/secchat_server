@@ -2,10 +2,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-import UserSchema from './userModel';
+import Users from './userModel';
 
 var ChatSchema = new Schema({
-  user: [UserSchema],
+  user: [Users],
   receiver: {
     type: String,
     required: 'Receiver'
