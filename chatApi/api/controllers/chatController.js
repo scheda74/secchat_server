@@ -41,8 +41,8 @@ exports.send_a_message = function(req, res) {
         if(!usr) {
             return res.status(403).send({ success: false, message: 'User authentication failed'});
         } else {
-            var new_msg = new Chat({ user: usr, receiver: req.body.receiver, text: req.body.enc_text });
-            // console.log(new_msg)
+            var new_msg = new Chat({ user: [usr], receiver: req.body.receiver, text: req.body.enc_text });
+            console.log(new_msg)
             new_msg.save(function(err, msg) {
                 if(err) return res.send({ success: false, log: err });
                 return res.send({ success: true, msg: msg, log: 'Message saved to database' });
