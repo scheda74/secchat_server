@@ -2,10 +2,27 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var User = require('./userModel');
+var userModel = {
+  name: {
+    type: String,
+    required: 'user name'
+  },
+  email: {
+    type: String,
+    required: 'email'
+  },
+  password: {
+    type: String,
+    required: 'password'
+  },
+  creation_date: {
+    type: Date,
+    default: Date.now
+  }
+}
 
 var ChatSchema = new Schema({
-  user: [User.model],
+  user: [userModel],
   receiver: {
     type: String,
     required: 'Receiver'
