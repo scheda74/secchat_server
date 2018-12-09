@@ -41,7 +41,7 @@ var ChatSchema = new Schema({
   sender: {
     type: String,
     required: 'Sender'
-  }
+  },
   receiver: {
     type: String,
     required: 'Receiver'
