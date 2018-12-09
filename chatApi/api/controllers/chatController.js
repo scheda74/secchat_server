@@ -41,12 +41,12 @@ exports.send_a_message = function(req, res) {
         if(!usr) {
             return res.status(403).send({ success: false, message: 'User authentication failed'});
         } else {
-            var new_msg = new Chat({ sender: usr.email, receiver: req.body.receiver, enc_text: req.body.enc_text });
+            var new_msg = new Chat({ user: usr.email, receiver: req.body.receiver, enc_text: req.body.enc_text });
             // console.log(new_msg)
             new_msg.save(function(err, msg) {
-            if(err) res.send({ success: false, log: err });
-            return res.send({ success: true, msg: msg, log: 'Message saved to database' });
-        });
+                if(err) return res.send({ success: false, log: err });
+                return res.send({ success: true, msg: msg, log: 'Message saved to database' });
+            });
         }
     });  
 }
@@ -69,7 +69,7 @@ exports.get_a_chat = function(req, res) {
         } else {
             Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
                 if(err) return res.status(500).send({success: false, log: 'error: ' + err});
-                return res.status(200).send({success: true, chat: messages, log: 'chat sent!'});
+                return res.status(200).send({success: true, chat: messages[0], log: 'chat sent!'});
                 //else return res.json({ success: true, chat: [], log: 'Start your chat!'});
             });
         }
