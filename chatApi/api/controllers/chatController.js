@@ -71,7 +71,7 @@ exports.get_a_chat = function(req, res) {
         if(!usr) {
             res.status(403).send({success: false, log: 'User authentication failed'});
         } else {
-            Chat.find({ $or: [{ user: [usr] }, { receiver: usr.email }] }, function(err, messages) {
+            Chat.find({ $or: [{ receiver: req.body.receiver }, { receiver: usr.email }] }, function(err, messages) {
                 console.log(messages);
                 if(err) return res.status(500).send({success: false, log: 'error: ' + err});
                 return res.status(200).send({success: true, chat: messages, log: 'chat sent!'});
