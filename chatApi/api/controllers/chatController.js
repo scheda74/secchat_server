@@ -43,6 +43,7 @@ exports.send_a_message = function(req, res) {
         } else {
             var new_msg = new Chat({ 
                 user: [usr], 
+                sender: usr.email,
                 receiver: req.body.receiver, 
                 data: [{ keys: req.body.keys, cipher: req.body.cipher, tag: req.body.tag }] 
             });
@@ -71,7 +72,7 @@ exports.get_a_chat = function(req, res) {
         if(!usr) {
             res.status(403).send({success: false, log: 'User authentication failed'});
         } else {
-            Chat.find({ $or: [{ receiver: req.body.receiver }, { receiver: usr.email }] }, function(err, messages) {
+            Chat.find({ $or: [{ sender: usr.email }, { receiver: usr.email }] }, function(err, messages) {
                 console.log(messages);
                 if(err) return res.status(500).send({success: false, log: 'error: ' + err});
                 return res.status(200).send({success: true, chat: messages, log: 'chat sent!'});

@@ -38,6 +38,10 @@ var dataModel = {
 
 var ChatSchema = new Schema({
   user: [userModel],
+  sender: {
+    type: String,
+    required: 'Sender'
+  }
   receiver: {
     type: String,
     required: 'Receiver'
