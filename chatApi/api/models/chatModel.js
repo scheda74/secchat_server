@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var User = require('./api/models/userModel');
+var User = require('./userModel');
 
 var ChatSchema = new Schema({
   user: {
