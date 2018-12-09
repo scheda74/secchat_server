@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 
 var ChatSchema = new Schema({
-  sender: {
+  user: {
     type: String,
     required: 'Sender'
   },
@@ -12,11 +12,11 @@ var ChatSchema = new Schema({
     type: String,
     required: 'Receiver'
   },
-  enc_text: {
+  text: {
     type: String,
     required: 'encrypted message'
   },
-  sent_date: {
+  createdAt: {
     type: Date,
     default: Date.now
   },

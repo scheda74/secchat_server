@@ -41,7 +41,7 @@ exports.send_a_message = function(req, res) {
         if(!usr) {
             return res.status(403).send({ success: false, message: 'User authentication failed'});
         } else {
-            var new_msg = new Chat({ user: usr.email, receiver: req.body.receiver, enc_text: req.body.enc_text });
+            var new_msg = new Chat({ user: usr.email, receiver: req.body.receiver, text: req.body.enc_text });
             // console.log(new_msg)
             new_msg.save(function(err, msg) {
                 if(err) return res.send({ success: false, log: err });
@@ -124,7 +124,7 @@ exports.create_user = function(req, res) {
             bcrypt.hash(req.body.password, req.app.get('saltRounds'), function(err, hash) {
                 if(err) return res.send({ success: false, message: 'Error in hashing password: ' + err});
                 console.log(hash);
-                var newUser = new User({ username: req.body.username , email: req.body.email, password: hash });
+                var newUser = new User({ name: req.body.name , email: req.body.email, password: hash });
                 newUser.save(function(err, createdUser) {
                     //console.log(createdUser);
                     if(err) 
@@ -132,7 +132,8 @@ exports.create_user = function(req, res) {
                     return res.status(200).send({
                         success: true,
                         message: 'User successfully created',
-                        token: token
+                        token: token,
+                        user: createdUser
                     });
                 });
             });
