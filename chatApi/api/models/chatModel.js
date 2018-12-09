@@ -21,16 +21,28 @@ var userModel = {
   }
 }
 
+var dataModel = {
+    keys: {
+      type: String,
+      required: 'keys'
+    },
+    cipher: {
+      type: String,
+      required: 'cipher'
+    },
+    tag: {
+      type: String,
+      required: cipher
+    }
+}
+
 var ChatSchema = new Schema({
   user: [userModel],
   receiver: {
     type: String,
     required: 'Receiver'
   },
-  text: {
-    type: String,
-    required: 'encrypted message'
-  },
+  data: [dataModel],
   createdAt: {
     type: Date,
     default: Date.now
