@@ -41,10 +41,11 @@ exports.send_a_message = function(req, res) {
         if(!usr) {
             return res.status(403).send({ success: false, message: 'User authentication failed'});
         } else {
+            console.log(req.body.keys);
             var new_msg = new Chat({ 
                 user: [usr], 
                 receiver: req.body.receiver, 
-                data: [{keys: req.body.keys, cipher: req.body.cipher, tag: req.body.tag}] 
+                data: [{ keys: req.body.keys, cipher: req.body.cipher, tag: req.body.tag }] 
             });
             console.log(new_msg)
             new_msg.save(function(err, msg) {
