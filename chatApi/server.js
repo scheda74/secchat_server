@@ -12,15 +12,8 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.database).then(
   (res) => {
       console.log("Successfully connected to the database.")
-      Chat.remove({}, function(err) {
-        console.log('something went wrong ' + err)
-      });
-      User.remove({}, function(err) {
-        console.log('something went wrong ' + err)
-      });
-      console.log('Models deleted!')
   }
-  ).catch((err) => {
+).catch((err) => {
     console.log("Connection to database failed");
 });
 app.set('superSecret', config.secret);
