@@ -73,7 +73,7 @@ exports.get_a_chat = function(req, res) {
             res.status(403).send({success: false, log: 'User authentication failed'});
         } else {
             Chat.find({ 
-                        $and: [{$or: [{ sender: usr.email }, { receiver: usr.email }]}, {$or: [{ sender: req.body.receiver }, { receiver: req.body.receiver }]} ] }, function(err, messages) {
+                $or: [{$and: [{ sender: usr.email }, { receiver: req.body.receiver }]}, {$and: [{ sender: req.body.receiver }, { receiver: usr.email }]} ] }, function(err, messages) {
                 console.log(messages);
                 if(err) return res.status(500).send({success: false, log: 'error: ' + err});
                 return res.status(200).send({success: true, chat: messages, log: 'chat sent!'});
