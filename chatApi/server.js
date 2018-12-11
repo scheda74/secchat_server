@@ -12,10 +12,10 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.database).then(
   (res) => {
       console.log("Successfully connected to the database.")
-      Chat.remove({}, function(err) {
-          console.log('sth wrong + ' + err);
-      });
-      console.log('chats deleted');
+    //   Chat.remove({}, function(err) {
+    //       console.log('sth wrong + ' + err);
+    //   });
+    //   console.log('chats deleted');
   }
 ).catch((err) => {
     console.log("Connection to database failed");
