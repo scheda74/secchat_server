@@ -45,7 +45,7 @@ exports.send_a_message = function(req, res) {
                 user: [usr], 
                 sender: usr.email,
                 receiver: req.body.receiver, 
-                data: [{ keys: req.body.keys, cipher: req.body.cipher, tag: req.body.tag }] 
+                data: [{ iv: req.body.iv, keys: req.body.keys, cipher: req.body.cipher, tag: req.body.tag }] 
             });
             //console.log(new_msg)
             new_msg.save(function(err, msg) {
@@ -76,7 +76,7 @@ exports.get_a_chat = function(req, res) {
             console.log('sender: ' + usr.email + '\n'+ 'receiver: ' + receiver);
             Chat.find({ 
                 $or: [{$and: [{ sender: usr.email }, { receiver: receiver }]}, {$and: [{ sender: receiver }, { receiver: usr.email }]} ] }, function(err, messages) {
-                console.log(messages);
+                // console.log(messages);
                 if(err) return res.status(500).send({success: false, log: 'error: ' + err});
                 return res.status(200).send({success: true, chat: messages, log: 'chat sent!'});
                 //else return res.json({ success: true, chat: [], log: 'Start your chat!'});

@@ -22,6 +22,10 @@ var userModel = {
 }
 
 var dataModel = {
+    iv : {
+      type: String,
+      required: 'iv'
+    },
     keys: {
       type: String,
       required: 'keys'
