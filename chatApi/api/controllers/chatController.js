@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
 exports.verifyToken = function(req, res, next) {
     var token = req.body.token || req.params.token || req.headers['x-access-token'];
     if(token) {
+        // create a token using the servers secret & match it with provided token
         jwt.verify(token, req.app.get('superSecret'), function(err, decoded) {
             if(err) {
                 return res.json({ success: false, message: 'Failed to authenticate token ' + err})
@@ -24,18 +25,7 @@ exports.verifyToken = function(req, res, next) {
     }
 }
 
-exports.list_all_messages = function(req, res) {
-Chat.find({}, function(err, msg) {
-    if (err) {
-        res.send(err);
-    }
-    res.json(msg);
-})
-};
-
-
 exports.send_a_message = function(req, res) {
-    //console.log(req.params.userId);
     User.findById(req.decoded.userId, function(err, usr) {
         if(err) return res.send(err);
         if(!usr) {
@@ -47,7 +37,6 @@ exports.send_a_message = function(req, res) {
                 receiver: req.body.receiver, 
                 data: [{ iv: req.body.iv, keys: req.body.keys, cipher: req.body.cipher, tag: req.body.tag }] 
             });
-            //console.log(new_msg)
             new_msg.save(function(err, msg) {
                 if(err) return res.send({ success: false, log: err });
                 return res.send({ success: true, msg: msg, log: 'Message saved to database' });
@@ -68,24 +57,18 @@ exports.get_available_users = function(req, res) {
 
 exports.get_a_chat = function(req, res) {
     User.findById(req.decoded.userId, function(err, usr) {
-        //res.json(usr);
-        if(err) {
-            res.send({success: false, log: err})
-        }
+        if(err) res.send({success: false, log: err})
+        
         if(!usr) {
             res.status(403).send({success: false, log: 'User authentication failed'});
         } else {
             var receiver = req.headers['receiver'];
-            //console.log('sender: ' + usr.email + '\n'+ 'receiver: ' + receiver);
             Chat.find({ 
                 $or: [{$and: [{ sender: usr.email }, { receiver: receiver }]}, {$and: [{ sender: receiver }, { receiver: usr.email }]} ] }, function(err, messages) {
-                // console.log(messages);
                 if(err) return res.status(500).send({success: false, log: 'error: ' + err});
                 return res.status(200).send({success: true, chat: messages, log: 'chat sent!'});
-                //else return res.json({ success: true, chat: [], log: 'Start your chat!'});
             });
         }
-        //res.json(messages)
     }).catch((err) => res.send({success: false, log: err}));
 }
 
