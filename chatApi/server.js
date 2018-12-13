@@ -12,10 +12,6 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.database).then(
   (res) => {
       console.log("Successfully connected to the database.")
-    //   Chat.remove({}, function(err) {
-    //       console.log('sth wrong + ' + err);
-    //   });
-    //   console.log('chats deleted');
   }
 ).catch((err) => {
     console.log("Connection to database failed");
@@ -28,13 +24,9 @@ app.use(bodyParser.json());
 var routes = require('./api/routes/chatRoutes'); //importing route
 routes(app); //register the route
 
-
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})
 });
-
-
-
 
 app.listen(port);
 
