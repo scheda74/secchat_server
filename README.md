@@ -1,5 +1,21 @@
-## secchat_server
+# Server-Side Implementation of Secchat.Me
+## A end-to-end encrypted Messaging System
 
-# this is our secure chat api
+## Design
 
-# have fun using it
+```
+Give the example
+```
+
+
+## API
+
+### Routes
+
+/login
+
+/signup
+
+/chats  
+
+/chats/users
