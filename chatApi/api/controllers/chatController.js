@@ -59,6 +59,10 @@ exports.send_a_message = function(req, res) {
 exports.get_available_users = function(req, res) {
     User.find({}, function(err, users) {
         if(err) return res.send({success: false, msg_enc: err.message});
+        Object.keys(users).map((key) => {
+            users[key]['password'] = '';
+        });
+        console.log(users);
         return res.json({success: true, available: users});
     });
 }
@@ -132,7 +136,7 @@ exports.create_user = function(req, res) {
             });
             bcrypt.hash(req.body.password, req.app.get('saltRounds'), function(err, hash) {
                 if(err) return res.send({ success: false, message: 'Error in hashing password: ' + err});
-                console.log(hash);
+                // console.log(hash);
                 var newUser = new User({ name: req.body.name , email: req.body.email, password: hash });
                 newUser.save(function(err, createdUser) {
                     //console.log(createdUser);
