@@ -62,7 +62,6 @@ exports.get_available_users = function(req, res) {
         Object.keys(users).map((key) => {
             users[key]['password'] = '';
         });
-        console.log(users);
         return res.json({success: true, available: users});
     });
 }
