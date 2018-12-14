@@ -1,5 +1,5 @@
 # Server-Side Implementation of Secchat.Me
-## A end-to-end encrypted Messaging System
+> A end-to-end encrypted Messaging System
 
 ## Design
 ### Server Design
@@ -30,9 +30,34 @@ The database stores user data and chats between two users. (A group chat feature
 
 ## API Documentation
 
+All requests are handled by routes.
+
+```javascript
+// chatRoutes.js
+
+module.exports = function(app) {
+  var chat = require('../controllers/chatController');
+
+  app
+    .get('/chats', chat.verifyToken, chat.get_a_chat)
+    .get('/chats/users', chat.verifyToken, chat.get_available_users)
+    .post('/chats', chat.verifyToken, chat.send_a_message);
+
+  app.route('/login')
+    .post(chat.login, (err) => {});
+
+  app.route('/signup')
+    .post(chat.create_user, (err) => {});
+};
+```
+
+Above code shows how requests are handled. Important to note is, that sensitive requests are handled first by the verifyToken() method. Hence, clients have to provide a web token which can be obtained by logging in or signing up for the service.
+
+## Routes: Client Request & Server Response Format
+
 ### Login - https://www.secchat.me/login
 
-#### .POST
+#### .POST - login()
 ```
 Client Request
 {
@@ -40,7 +65,7 @@ Client Request
     password: String
 }
 
-Response
+Server Response
 {
     success: true/false,
     user: [User Object],
@@ -51,7 +76,7 @@ Response
 
 ### Sign Up - https://www.secchat.me/signup
 
-#### .POST
+#### .POST - create_a_user()
 ```
 Client Request
 {
@@ -60,7 +85,7 @@ Client Request
     password: String
 }
 
-Response
+Server Response
 {
     success: true/false,
     user: [User Object],
@@ -87,7 +112,7 @@ Client Request
         } ]
 }
 
-Response
+Server Response
 {
     success: true/false,
     msg: Chat Object,
@@ -102,7 +127,7 @@ Client Request
     token: String
 }
 
-Response
+Server Response
 {
     success: true/false,
     chat: [Chat Object],
