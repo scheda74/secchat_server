@@ -30,19 +30,17 @@ The database stores user data and chats between two users. (A group chat feature
 
 ## API Documentation
 
-### Login
+### Login - https://www.secchat.me/login
 
-https://www.secchat.me/login
 #### .POST
 ```
+Client Request
 {
     email: String
     password: String
 }
-```
 
-##### Response
-```
+Response
 {
     success: true/false,
     user: [User Object],
@@ -51,20 +49,18 @@ https://www.secchat.me/login
 }
 ```
 
-### Sign Up
-https://www.secchat.me/signup
+### Sign Up - https://www.secchat.me/signup
 
 #### .POST
 ```
+Client Request
 {
     name: String,
     email: String,
     password: String
 }
-```
 
-##### Response
-```
+Response
 {
     success: true/false,
     user: [User Object],
@@ -73,11 +69,13 @@ https://www.secchat.me/signup
 }
 ```
 
-### Chats
+### Chats - https://www.secchat.me/chats
 
-#### .POST - sendMessage()
+#### .POST - send_a_message()
 ```
+Client Request
 {
+    token: String,
     user: [User Object],
     sender: String,
     receiver: String,
@@ -88,9 +86,8 @@ https://www.secchat.me/signup
         tag: String
         } ]
 }
-```
-##### Response
-```
+
+Response
 {
     success: true/false,
     msg: Chat Object,
@@ -98,6 +95,33 @@ https://www.secchat.me/signup
 }
 ```
 
-https://www.secchat.me/chats  
+#### .GET - get_a_chat()
+```
+Client Request
+{
+    token: String
+}
 
-https://www.secchat.me/chats/users
+Response
+{
+    success: true/false,
+    chat: [Chat Object],
+    log: String
+}
+```
+
+### Users - https://www.secchat.me/chats/users
+
+#### .GET - get_available_users()
+```
+Client Request
+{
+    token: String
+}
+
+Server Response
+{
+    success: true/false,
+    available: [User Object]
+}
+```
